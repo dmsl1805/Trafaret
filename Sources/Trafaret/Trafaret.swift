@@ -2,25 +2,35 @@ import Foundation
 import SwiftUI
 import CoreGraphics
 
-let moduleMarker = "<—module—>"
-let testCaseMarker = "<—test-case—>"
-let testMarker = "<—test—>"
-let viewMarker = "<—view—>"
-let viewConfigMarker = "<—view—config->"
-let perceptualPrecisionMarker = "<—perceptual-precision->"
 
-let testTemplate = """
-import XCTest
-import SnapshotTesting
-import SwiftUI
-import \(moduleMarker)
 
-final class \(testCaseMarker): XCTestCase {
-    func test\(testMarker)() {
-        assertSnapshot(matching: UIHostingController(rootView: \(viewMarker)()), as: .image(on: \(viewConfigMarker), perceptualPrecision: \(perceptualPrecisionMarker))
+struct TestCase {
+    enum Marker: String {
+        case module
+        case testCase
+        case testName
+        case viewName
+        case viewConfig
+        case perceptualPrecision
+        
+        var markerValue: String { "<-\(rawValue)->" }
     }
+    
+    private let template = """
+    import XCTest
+    import SnapshotTesting
+    import SwiftUI
+    import \(Marker.module.markerValue)
+    
+    final class \(Marker.testCase.markerValue): XCTestCase {
+        func test\(Marker.testName.markerValue)() {
+            assertSnapshot(matching: UIHostingController(rootView: \(Marker.viewName.markerValue)()), as: .image(on: \(Marker.viewConfig.markerValue), perceptualPrecision: \(Marker.perceptualPrecision.markerValue))
+        }
+    }
+    """
+    
+    
 }
-"""
 
 public enum FilePath {
     case defaultFile(StaticString)
@@ -52,13 +62,13 @@ public enum FilePath {
     
     var trafaretImage: UIImage? {
         get throws {
-            UIImage(data: try Data(contentsOf: fileURL))
+            UIImage(data: try Data(contentsOf: trafaretFileURL))
         }
     }
     
     var fileManager: FileManager { .default }
 
-    var fileURL: URL {
+    var trafaretFileURL: URL {
         let defaultFileExtension = "png"
         
         switch self {
@@ -78,13 +88,34 @@ public enum FilePath {
                 .appendingPathExtension(fileExtension ?? defaultFileExtension)
         }
     }
+    
+    var testFileURL: URL {
+        let defaultFileExtension = "swift"
+        
+        switch self {
+        case let .defaultFile(file):
+            let fileURL = URL(fileURLWithPath: "\(file)", isDirectory: false)
+            let fileName = fileURL.deletingPathExtension().lastPathComponent
+            
+            return fileURL
+                .deletingLastPathComponent()
+                .appendingPathComponent("__Trafarets__")
+                .appendingPathComponent(fileName)
+                .appendingPathExtension(defaultFileExtension)
+
+        case let .custom(name, directory, _):
+            return URL(fileURLWithPath: directory, isDirectory: true)
+                .appendingPathComponent(name)
+                .appendingPathExtension(fileExtension ?? defaultFileExtension)
+        }
+    }
 }
 
 public struct TestConfig {
     let path: FilePath
     let module: String
     let name: String
-//    let 
+//    let
 //    let moduleMarker = "<—module—>"
 //    let testCaseMarker = "<—test-case—>"
 //    let testMarker = "<—test—>"
@@ -159,16 +190,30 @@ public extension View {
                 switch config.mode {
                 case .trafaret:
                     trafaretView(trafaretImage, container: container, config: config, name: previewName)
+                    
                 case .sideBySide:
                     sideBySideView(trafaretImage, container: container, config: config, name: previewName)
                 }
                 
-                if let actualImage = image(size: trafaretImage.size) {
+                if trafaretImage.size != container.size {
+                    errorView(
+                        """
+                        Provided image and container sizes are differen.
+                        Image: \(trafaretImage.size)
+                        Device: \(container.size)
+                        """,
+                        name: previewName
+                    )
+                    
+                } else if config.isDiffingEnabled,
+                          let actualImage = image(size: container.size) {
                     let diff = diff(trafaretImage, actualImage)
                     diffImageView(diff, container: container, name: previewName)
+                    
                 } else {
                     errorView("No image was rendered", name: previewName)
                 }
+                
             } else if case let .failure(error) = result {
                 let fileURL = path.fileURL
 
