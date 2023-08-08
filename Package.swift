@@ -6,22 +6,43 @@ import PackageDescription
 let package = Package(
     name: "Trafaret",
     platforms: [
-      .iOS(.v13),
+      .iOS(.v16),
       .macOS(.v10_15),
       .tvOS(.v13),
       .watchOS(.v6),
     ],
     products: [
         .library(name: "Trafaret", targets: ["Trafaret"]),
+        .library(name: "TrafaretPackageExample", targets: ["TrafaretPackageExample"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-dependencies", from: "0.1.0")
+        .package(url: "https://github.com/dmsl1805/swift-snapshot-testing", branch: "original-file-name"),
     ],
     targets: [
         .target(
-            name: "Trafaret",
+            name: "TrafaretPackageExample",
             dependencies: [
-                .product(name: "Dependencies", package: "swift-dependencies"),
+                "Trafaret"
+            ],
+            exclude: [
+                "__Trafarets__"
+            ]
+        ),
+        .testTarget(
+            name: "TrafaretPackageExampleTests",
+            dependencies: [
+                "TrafaretPackageExample",
+                .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
+            ]
+        ),
+        .target(
+            name: "Trafaret",
+            dependencies: []
+        ),
+        .testTarget(
+            name: "TrafaretTests",
+            dependencies: [
+                "Trafaret"
             ]
         ),
     ]

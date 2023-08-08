@@ -7,12 +7,13 @@
 
 import SwiftUI
 import Trafaret
+import TrafaretPackageExample
 
 @main
 struct ExamplesApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ExampleViewPreview.previews
         }
     }
 }

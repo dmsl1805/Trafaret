@@ -12,6 +12,7 @@
 		4F139EB32A7D31A0006D4893 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4F139EB22A7D31A0006D4893 /* Assets.xcassets */; };
 		4F139EB62A7D31A0006D4893 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4F139EB52A7D31A0006D4893 /* Preview Assets.xcassets */; };
 		4F139EC02A7D3260006D4893 /* Trafaret in Frameworks */ = {isa = PBXBuildFile; productRef = 4F139EBF2A7D3260006D4893 /* Trafaret */; };
+		4FEC4D322A80F21800AC7C5E /* TrafaretPackageExample in Frameworks */ = {isa = PBXBuildFile; productRef = 4FEC4D312A80F21800AC7C5E /* TrafaretPackageExample */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4F139EC02A7D3260006D4893 /* Trafaret in Frameworks */,
+				4FEC4D322A80F21800AC7C5E /* TrafaretPackageExample in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,6 +107,7 @@
 			name = Examples;
 			packageProductDependencies = (
 				4F139EBF2A7D3260006D4893 /* Trafaret */,
+				4FEC4D312A80F21800AC7C5E /* TrafaretPackageExample */,
 			);
 			productName = Examples;
 			productReference = 4F139EAB2A7D319F006D4893 /* Examples.app */;
@@ -134,6 +137,9 @@
 				Base,
 			);
 			mainGroup = 4F139EA22A7D319F006D4893;
+			packageReferences = (
+				4FEC4D2E2A7F82A600AC7C5E /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
+			);
 			productRefGroup = 4F139EAC2A7D319F006D4893 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -361,10 +367,25 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		4FEC4D2E2A7F82A600AC7C5E /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		4F139EBF2A7D3260006D4893 /* Trafaret */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Trafaret;
+		};
+		4FEC4D312A80F21800AC7C5E /* TrafaretPackageExample */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TrafaretPackageExample;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

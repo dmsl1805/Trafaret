@@ -1,6 +1,6 @@
 import Foundation
 
-public enum Device {
+public enum Device: String {
     case iPhoneX
     case iPhoneXS
     case iPhoneXSMax
