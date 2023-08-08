@@ -62,9 +62,9 @@ struct TestCase {
     
     private var viewConfigValue: String {
         switch container {
-        case .device(let device):
+        case .device(let device, _):
             return "ViewImageConfig.\(device.rawValue)"
-        case .size(let size):
+        case .size(let size, _):
             return "ViewImageConfig(size: CGSize(width: \(size.width), height: \(size.height))"
         }
     }
@@ -160,8 +160,7 @@ public extension TrafaretSnapshotProvider where Self: PreviewProvider {
             .trafaret(
                 on: previewContainer,
                 compareAs: compareConfig,
-                path: path,
-                scale: 3
+                path: path
             )
     }
 }
@@ -173,13 +172,12 @@ public extension View {
     func trafaret(
         on container: PreviewContainer,
         compareAs config: CompareConfig = .trafaret,
-        path: FilePath,
-        scale: CGFloat
+        path: FilePath
     ) -> some View {
         let previewName = path.formattedName
         
         let result = `catch` {
-            try path.trafaretImage(scale: scale)
+            try path.trafaretImage(scale: container.scale)
         }
                                 
         Group {
@@ -208,7 +206,7 @@ public extension View {
                     )
                     
                 } else if config.isDiffingEnabled,
-                          let actualImage = image(size: trafaretImage.size, scale: scale) {
+                          let actualImage = image(size: trafaretImage.size, scale: container.scale) {
                     let diff = diff(trafaretImage, actualImage)
                     diffImageView(diff, container: container, name: previewName)
 
