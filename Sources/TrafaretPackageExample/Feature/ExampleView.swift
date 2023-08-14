@@ -21,16 +21,14 @@ struct ExampleView: View {
     }
 }
 
+@available(iOS 16.0, *)
 public struct ExampleViewPreview: PreviewProvider, TrafaretSnapshotProvider {
-    public static var compareConfig: CompareConfig {
-        .trafaret(opacity: 0.5)
-    }
+        
+    public static let previewContainer = PreviewContainer.device(.iPhone12, scale: 3)
     
-    public static let previewContainer = PreviewContainer.device(.iPhone12)
+    public static let path = Package.trafaretFilePath()
     
-    public static let path = FilePath.defaultFile()
-    
-    public static let testConfig = TestConfig()
+    public static let testConfig = Package.testConfig()
 
     public static var body: some View {
         ExampleView()

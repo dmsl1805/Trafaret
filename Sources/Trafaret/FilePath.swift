@@ -61,8 +61,6 @@ public enum FilePath {
         UIImage(data: try Data(contentsOf: trafaretFileURL), scale: scale)
     }
     
-    var fileManager: FileManager { .default }
-
     public var trafaretFileURL: URL {
         let defaultFileExtension = "png"
         
@@ -107,7 +105,7 @@ public enum FilePath {
 
         case let .custom(_, directory, name, _):
             return URL(fileURLWithPath: directory, isDirectory: true)
-                .appendingPathComponent(name)
+                .appendingPathComponent("\(name)SnapshotTest")
                 .appendingPathExtension(defaultFileExtension)
         }
     }
