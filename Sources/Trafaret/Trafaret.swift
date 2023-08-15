@@ -12,11 +12,11 @@ public extension View {
         path: FilePath
     ) -> some View {
         let previewName = path.formattedName
-        
+                
         let result = `catch` {
             try path.trafaretImage(scale: container.scale)
         }
-                                
+        
         Group {
             self
                 .preview(on: container)
@@ -42,10 +42,10 @@ public extension View {
                         name: previewName
                     )
                     
-                } else if config.isDiffingEnabled,
-                          let actualImage = image(size: trafaretImage.size, scale: container.scale) {
-                    let diff = diff(trafaretImage, actualImage)
-                    diffImageView(diff, container: container, name: previewName)
+//                } else if config.isDiffingEnabled,
+//                          let actualImage = image(size: trafaretImage.size, scale: container.scale) {
+//                    let diff = diff(trafaretImage, actualImage)
+//                    diffImageView(diff, container: container, name: previewName)
 
                 } else {
                     errorView("No image was rendered", name: previewName)
